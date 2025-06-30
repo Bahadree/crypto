@@ -6,11 +6,6 @@ from app import create_app
 
 app = create_app()
 
-@app.route("/")
-def root():
-    return "Kriptoanaliz Web API çalışıyor."
-
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
-    # Render.com için debug kapalı olmalı
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
