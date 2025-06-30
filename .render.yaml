@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: kriptoanaliz-web
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn run:app
+    envVars:
+      - key: PORT
+        value: 10000

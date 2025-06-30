@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv
+venv/
+ENV/
+env/
+*.sqlite3
+*.db
+
+# Flask/Dash
+instance/
+*.log
+
+# Jupyter
+.ipynb_checkpoints
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Render/Deployment
+*.pid
+
+# PyCharm
+.idea/
+
+# Misc
+*.bak
+*.swp

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fiyat Planları | Elite Crypto Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .info-text {
+      max-width: 900px;
+      margin: 40px auto 20px;
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .info-text h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: #FFD700;
+    }
+
+    .info-text p {
+      font-size: 1.1rem;
+      color: #bbb;
+    }
+
+    .pricing-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .plan {
+      background: #111;
+      border-radius: 16px;
+      padding: 32px 24px;
+      width: calc(25% - 24px);
+      min-width: 260px;
+      box-shadow: 0 0 16px #FFD70022;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .plan:hover {
+      transform: translateY(-4px);
+    }
+
+    .plan h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      color: #FFD700;
+    }
+
+    .plan-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #eee;
+      margin: 6px 0 12px;
+    }
+
+    .plan-desc {
+      font-size: 0.95rem;
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    .button {
+      background-color: #FFD700;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      transition: background-color 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .button:hover {
+      background-color: #fff;
+      color: #FFD700;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    li {
+      padding-left: 24px;
+      position: relative;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #FFD700;
+    }
+
+    @media (max-width: 1100px) {
+      .plan {
+        width: calc(50% - 24px);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .plan {
+        width: 90%;
+      }
+    }
+
+    .vip-info {
+      background: #181b1c;
+      color: #FFD700;
+      padding: 32px 24px;
+      border-radius: 18px;
+      text-align: center;
+      margin: 48px auto;
+      max-width: 480px;
+    }
+
+    .vip-info h2 {
+      color: #FFD700;
+    }
+
+    .vip-info p {
+      color: #fff;
+      margin-top: 18px;
+    }
+
+    .vip-info a {
+      color: #FFD700;
+      text-decoration: underline;
+    }
+
+    /* Popup tasarımı */
+    #congrats-popup {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .congrats-popup-content {
+      background: #181b1c;
+      border-radius: 14px;
+      padding: 32px 28px 24px 28px;
+      min-width: 280px;
+      max-width: 90vw;
+      box-shadow: 0 2px 24px #222;
+      text-align: center;
+      border: 2px solid #FFD700;
+    }
+    .congrats-popup-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #FFD700;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .congrats-popup-message {
+      color: #fff;
+      font-size: 1.08rem;
+      margin-bottom: 22px;
+    }
+    .congrats-popup-close {
+      background: #FFD700;
+      color: #181b1c;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 32px;
+      font-size: 1.08rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .congrats-popup-close:hover {
+      background: #fff;
+      color: #FFD700;
+    }
+  </style>
+</head>
+<body>
+  <div style="height:24px;"></div>
+  <section class="info-text">
+    <h2>İhtiyacınıza Uygun Planı Seçin</h2>
+    <p>Temel piyasa takibinden ileri analizlere kadar erişim sağlayan esnek üyelik planlarımızı keşfedin.</p>
+  </section>
+
+  <div class="pricing-container">
+    <!-- Free Plan -->
+    <div class="plan">
+      <h2>₺0</h2>
+      <div class="plan-title">Free</div>
+      <div class="plan-desc">Temel grafik ve piyasa verilerine ücretsiz erişim.</div>
+      {% if session.get('plan') == 'free' %}
+        <button class="button" disabled>Aktif Plan</button>
+      {% elif session.get('user_email') and session.get('is_vip') %}
+        <button class="button" id="downgrade-btn-free">Bu plana geç</button>
+      {% elif session.get('user_email') %}
+        <button class="button" disabled>VIP Free</button>
+      {% else %}
+        <button class="button" onclick="window.location.href='{{ url_for('main.login') }}'">Giriş Yap</button>
+      {% endif %}
+      <ul>
+        <li>Anlık fiyat takibi</li>
+        <li>Temel grafikler</li>
+      </ul>
+    </div>
+
+    <!-- Basic Plan -->
+    <div class="plan">
+      <h2>₺999</h2>
+      <div class="plan-title">Basic</div>
+      <div class="plan-desc">Gelişmiş analiz araçlarına sınırsız erişim.</div>
+      {% if session.get('plan') == 'basic' %}
+        <button class="button" disabled>Aktif Plan</button>
+      {% elif session.get('user_email') and session.get('is_vip') and session.get('plan') in ['team', 'business'] %}
+        <button class="button" id="downgrade-btn-basic">Bu plana geç</button>
+      {% elif session.get('user_email') and session.get('is_vip') and session.get('plan') == 'free' %}
+        <button class="button" id="upgrade-btn-basic">Planı Yükselt</button>
+      {% elif session.get('user_email') %}
+        <form id="iyzico-form-basic" action="/iyzico/pay" method="post" style="display:inline;">
+          <input type="hidden" name="plan" value="basic">
+          <input type="hidden" name="email" value="{{ session.get('user_email') }}">
+          <button class="button" type="submit">İyzico ile Satın Al</button>
+        </form>
+      {% else %}
+        <button class="button" onclick="window.location.href='{{ url_for('main.login') }}'">Giriş Yap</button>
+      {% endif %}
+      <div id="buy-msg-basic" style="display:none; color:#00e676; font-weight:bold; margin-top:12px;"></div>
+      <ul>
+        <li>VIP sinyaller</li>
+        <li>Detaylı analiz panelleri</li>
+        <li>Favori coin takibi</li>
+        <li>Öncelikli destek</li>
+      </ul>
+    </div>
+
+    <!-- Team Plan -->
+    <div class="plan">
+      <h2>₺2499</h2>
+      <div class="plan-title">Team</div>
+      <div class="plan-desc">Küçük ekipler için iş birliği ve kontrol araçları.</div>
+      {% if session.get('plan') == 'team' %}
+        <button class="button" disabled>Aktif Plan</button>
+      {% elif session.get('user_email') and session.get('is_vip') and session.get('plan') == 'business' %}
+        <button class="button" id="downgrade-btn-team">Bu plana geç</button>
+      {% elif session.get('user_email') and session.get('is_vip') and session.get('plan') in ['free', 'basic'] %}
+        <button class="button" id="upgrade-btn-team">Planı Yükselt</button>
+      {% elif session.get('user_email') %}
+        <button class="button" id="buy-btn-team">VIP Team Yükselt</button>
+      {% else %}
+        <button class="button" onclick="window.location.href='{{ url_for('main.login') }}'">Giriş Yap</button>
+      {% endif %}
+      <div id="buy-msg-team" style="display:none; color:#00e676; font-weight:bold; margin-top:12px;"></div>
+      <ul>
+        <li>VIP plan özellikleri</li>
+        <li>Takım panoları</li>
+        <li>Paylaşılan izleme listeleri</li>
+        <li>Yetki rolleri</li>
+        <li>Öncelikli ekip desteği</li>
+      </ul>
+    </div>
+
+    <!-- Business Plan -->
+    <div class="plan">
+      <h2>₺4999</h2>
+      <div class="plan-title">Business</div>
+      <div class="plan-desc">Kurumsal entegrasyonlar ve tam analiz paketi.</div>
+      {% if session.get('plan') == 'business' %}
+        <button class="button" disabled>Aktif Plan</button>
+      {% elif session.get('user_email') and session.get('is_vip') and session.get('plan') in ['free', 'basic', 'team'] %}
+        <button class="button" id="upgrade-btn-business">Planı Yükselt</button>
+      {% elif session.get('user_email') %}
+        <button class="button" id="buy-btn-business">VIP Business İletişim</button>
+      {% else %}
+        <button class="button" onclick="window.location.href='{{ url_for('main.login') }}'">Giriş Yap</button>
+      {% endif %}
+      <div id="buy-msg-business" style="display:none; color:#00e676; font-weight:bold; margin-top:12px;"></div>
+      <ul>
+        <li>Team plan özellikleri</li>
+        <li>API erişimi</li>
+        <li>Özel raporlar</li>
+        <li>Hesap yöneticisi</li>
+        <li>Kurumsal entegrasyonlar</li>
+      </ul>
+    </div>
+  </div>
+
+  {% if session.get('is_vip') %}
+    <div id="vip-banner" style="position:fixed;top:0;left:0;width:100vw;z-index:10000;background:#181b1c;border-bottom:2px solid #FFD700;color:#FFD700;text-align:center;padding:18px 8px 12px 8px;font-size:1.18rem;font-family:'Montserrat',sans-serif;box-shadow:0 2px 16px #FFD70022;">
+      <span style="font-weight:bold;">Tebrikler! VIP Üyesiniz 🎉</span>
+      <span style="color:#fff;font-weight:normal;font-size:1rem;margin-left:12px;">
+        Aktif planınız: <b>{{ session.get('plan', 'basic')|capitalize }}</b>
+      </span>
+      <button id="close-vip-banner" style="margin-left:18px;background:none;border:none;color:#FFD700;font-size:1.3rem;cursor:pointer;vertical-align:middle;">&times;</button>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var closeBtn = document.getElementById("close-vip-banner");
+        var banner = document.getElementById("vip-banner");
+        if (closeBtn && banner) {
+          closeBtn.onclick = function() {
+            banner.style.display = "none";
+          };
+        }
+      });
+    </script>
+  {% endif %}
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Kullanıcı planı ve giriş durumu
+  const userPlan = "{{ session.get('plan', 'free') }}";
+  const isLoggedIn = {{ 'true' if session.get('user_email') else 'false' }};
+  const isVip = {{ 'true' if session.get('is_vip') else 'false' }};
+
+  // Helper: plan adı ve buton id eşlemesi
+  const plans = [
+    { id: "buy-btn-basic", name: "basic" },
+    { id: "buy-btn-team", name: "team" },
+    { id: "buy-btn-business", name: "business" },
+    { id: "upgrade-btn-basic", name: "basic" },
+    { id: "upgrade-btn-team", name: "team" },
+    { id: "upgrade-btn-business", name: "business" },
+    { id: "downgrade-btn-free", name: "free" },
+    { id: "downgrade-btn-basic", name: "basic" },
+    { id: "downgrade-btn-team", name: "team" }
+  ];
+
+  plans.forEach(function(plan) {
+    const btn = document.getElementById(plan.id);
+    const msgBox = document.getElementById("buy-msg-" + plan.name);
+    if (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (!isLoggedIn) {
+          window.location.href = "{{ url_for('main.login') }}";
+          return;
+        }
+        if (userPlan === plan.name) {
+          if (msgBox) {
+            msgBox.innerText = "Zaten bu plan aktiftir.";
+            msgBox.style.display = "block";
+          } else {
+            alert("Zaten bu plan aktiftir.");
+          }
+          return;
+        }
+        // Satın alma veya plan değişikliği işlemi başlat
+        fetch("{{ url_for('main.buy') }}?plan=" + plan.name, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        })
+        .then(resp => resp.json())
+        .then(data => {
+          if (data.success) {
+            // Popup göster ve localStorage ile mesajı sakla
+            showCongratsPopup(data.message || "Satın alma işlemi başarılı! VIP üyeliğiniz aktif edildi.");
+            if (msgBox) {
+              msgBox.innerText = data.message || "Plan değişikliği başarılı.";
+              msgBox.style.display = "block";
+            }
+            localStorage.setItem("congrats_popup_message", data.message || "Satın alma işlemi başarılı! VIP üyeliğiniz aktif edildi.");
+            // Sayfa yenileme popup kapatılınca olacak
+          } else if (data.message) {
+            if (msgBox) {
+              msgBox.innerText = data.message;
+              msgBox.style.display = "block";
+            } else {
+              alert(data.message);
+            }
+          }
+        });
+      });
+    }
+  });
+
+  // Popup fonksiyonu
+  function showCongratsPopup(message) {
+    let popup = document.getElementById("congrats-popup");
+    function closeAndRedirect() {
+      popup.style.display = "none";
+      localStorage.removeItem("congrats_popup_message");
+      window.location.href = "{{ url_for('main.analysis') }}";
+    }
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.id = "congrats-popup";
+      popup.innerHTML = `
+        <div class="congrats-popup-content">
+          <div class="congrats-popup-title">Tebrikler!</div>
+          <div class="congrats-popup-message">${message}</div>
+          <button class="congrats-popup-close">Kapat</button>
+        </div>
+      `;
+      document.body.appendChild(popup);
+      document.querySelector(".congrats-popup-close").onclick = closeAndRedirect;
+    } else {
+      popup.querySelector(".congrats-popup-message").innerText = message;
+      popup.style.display = "flex";
+      popup.querySelector(".congrats-popup-close").onclick = closeAndRedirect;
+    }
+    popup.style.display = "flex";
+  }
+
+  // Sayfa yüklendiğinde popup mesajı varsa göster
+  const congratsMsg = localStorage.getItem("congrats_popup_message");
+  if (congratsMsg) {
+    showCongratsPopup(congratsMsg);
+  }
+});
+  </script>
+</body>
+</html>
+  </script>
+</body>
+</html>

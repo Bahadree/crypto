@@ -1,0 +1,12 @@
+# Render.com için opsiyonel olarak bir render.yaml dosyası ekleyebilirsiniz:
+
+services:
+  - type: web
+    name: kriptoanaliz-web
+    env: python
+    buildCommand: ""
+    startCommand: python run.py
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production

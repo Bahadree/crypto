@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>E-posta Doğrulama | Elite Crypto Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        .verify-main {
+            max-width: 420px;
+            margin: 64px auto 0 auto;
+            background: #111;
+            border-radius: 24px;
+            box-shadow: 0 0 32px 0 #FFD70022, 0 0 0 2px #FFD70044;
+            padding: 40px 32px 32px 32px;
+            text-align: center;
+            position: relative;
+        }
+        h2 {
+            color: #FFD700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.7rem;
+            margin-bottom: 18px;
+        }
+        .verify-msg {
+            color: #aaa;
+            font-size: 1.13rem;
+            margin-bottom: 18px;
+        }
+        a {
+            color: #FFD700;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .verify-main {
+                max-width: 98vw;
+                padding: 18px 4vw 18px 4vw;
+            }
+            h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-main">
+        <h2>E-posta Doğrulandı</h2>
+        <div class="verify-msg">
+            {% if session.get('user_email') %}
+                Hoşgeldiniz, <b>{{ session.get('user_email') }}</b>!<br>
+                Hesabınız doğrulandı ve otomatik giriş yapıldı.<br>
+                <a href="{{ url_for('main.index') }}">Anasayfaya gitmek için tıklayın</a>
+            {% else %}
+                E-posta adresiniz başarıyla doğrulandı.<br>
+                <a href="{{ url_for('main.login') }}">Giriş yapmak için tıklayın</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+</html>

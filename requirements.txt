@@ -1,5 +1,9 @@
 Flask
+gunicorn
 requests
 pandas
-ta
+plotly
+joblib
 scipy
+numpy
+# Diğer bağımlılıklarınız varsa ekleyin
