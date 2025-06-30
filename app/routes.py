@@ -458,6 +458,10 @@ def verify():
         session['is_vip'] = is_vip_from_supabase(user_email)
     return render_template('verify.html')
 
+@main.route('/')
+def root_render():
+    return "Kriptoanaliz Web API çalışıyor."
+
 # Eksik fonksiyon: is_vip_from_supabase
 def is_vip_from_supabase(email):
     from urllib.parse import quote
